@@ -13,12 +13,12 @@ const IndexRoutes = [
     children: [
       {
         path: "/",
-        // 重定向, 登陆后直接进入/home
-        element: <Navigate to="/home" />,
+        // 重定向, 登陆后直接进入/chat
+        element: <Navigate to="/chat" />,
       },
       {
-        path: "/home",
-        element: LazyLoad(lazy(() => import("@/pages/home"))),
+        path: "/chat",
+        element: LazyLoad(lazy(() => import("@/pages/chat"))),
         meta: new RouteMeta("主页"),
       },
       dataRoutes,

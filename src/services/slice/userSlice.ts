@@ -16,7 +16,7 @@ export interface UserState {
 
 /** 初始化全局共享的状态对象 */
 const initialState: UserState = {
-  account: new SnUser(),
+  account: new SnUser({id:10001,alias:"西柚配咖啡"}),
 };
 
 /**

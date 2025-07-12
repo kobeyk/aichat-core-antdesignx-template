@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "@/services/slice/userSlice";
-import messageSlice from "@/services/slice/messageSlice";
+import promptSlice from "@/services/slice/promptSlice";
 /**
  *  所有的数据切片都是按模块划分的，每一个数据切片可以理解为对一类
  *  业务数据的处理（同步+异步），处理的结果同步放到store中进行state状态管理
@@ -10,7 +10,7 @@ import messageSlice from "@/services/slice/messageSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
-    aiMessage: messageSlice
+    aiPrompt: promptSlice
   },
   /** 仅在开发环境下开启 */
   devTools: process.env.NODE_ENV !== "production",

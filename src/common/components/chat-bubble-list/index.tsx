@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
+  apiKey,
   baseUrl,
   defaultLLM,
   LLMNames,
@@ -35,7 +36,6 @@ import aiJpg from "@/assets/images/ai.jpg";
 import userJpg from "@/assets/images/avatar.jpg";
 import { convertTimestampToDate } from "@/utils/utils";
 import { ChatBubbleItem, LLMCallBackMessage, LLMClient } from "aichat-core";
-// import "github-markdown-css";
 import "./index.scss";
 /**
  * Chat List 样式
@@ -202,8 +202,8 @@ const ChatBubbleList: FC<ChatBubbleListProps> = ({
       setCurrentModel(defaultModelName);
       onSetLLM({
         llmName: LLMNames.deepseek,
-        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-        baseUrl: import.meta.env.VITE_OPENAI_BASE_URL,
+        apiKey: apiKey,
+        baseUrl: baseUrl,
         modelName: defaultModelName,
       });
       console.log("=====================0.默认大模型：" + defaultModelName);

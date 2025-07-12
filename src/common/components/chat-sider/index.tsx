@@ -97,6 +97,9 @@ const ChatConversationMG: FC<ChatConversationMGProps> = ({
   abortController,
 }) => {
   const { styles } = useStyle();
+  const jumpMyCSDN = () => {
+     window.open("https://blog.csdn.net/Appleyk/article/details/149234650");
+  }
   return (
     <div className={styles.sider}>
       {/* 🌟 Logo */}
@@ -185,9 +188,10 @@ const ChatConversationMG: FC<ChatConversationMGProps> = ({
         })}
       />
 
-      <div className={styles.siderFooter}>
+      <div className={styles.siderFooter} onClick={jumpMyCSDN}>
         <Avatar size={24} src={avatarJPG} />
-        <Button type="text" icon={<QuestionCircleOutlined />} />
+        <p style={{cursor:"pointer"}}>查看脚手架关联博文</p>
+        <Button onClick={jumpMyCSDN} type="text" icon={<QuestionCircleOutlined />} />
       </div>
     </div>
   );

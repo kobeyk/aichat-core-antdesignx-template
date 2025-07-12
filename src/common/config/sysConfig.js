@@ -1,6 +1,7 @@
 
 const systemTitle = window.systemTitle;
 const baseUrl = window.baseUrl;
+const apiKey = window.apiKey;
 const model = window.model;
 const mcpServer = window.mcpServer;
 const defaultLLM = window.defaultLLM;
@@ -17,6 +18,7 @@ const useMockData = 1;   // 0 不启用mock数据 ， 1启用mock数据
 export {
     systemTitle,
     baseUrl,
+    apiKey,
     model,
     mcpServer,
     ModelNames,

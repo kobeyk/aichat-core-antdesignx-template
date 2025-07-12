@@ -14,7 +14,7 @@ export default function HeaderLogo({ title }: { title: string }) {
       }}
     >
       <img className="header-logo" src={logo} />
-      <h1 className="header-title">{title}</h1>
+      <h1 className="header-title" onClick={()=>window.open("https://space.bilibili.com/452968297?spm_id_from=333.1007.0.0")}>{title}</h1>
     </Flex>
   );
 }

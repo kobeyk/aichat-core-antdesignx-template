@@ -12,11 +12,6 @@ const dataRoutes = {
       element: <Navigate to={"./retrieval"}></Navigate>,
     },
     {
-      path: "retrieval",
-      element: LazyLoad(lazy(() => import("@/pages/data/data-retrieval"))),
-      meta: new RouteMeta("数据查询"),
-    },
-    {
       path: "manage",
       element: LazyLoad(lazy(() => import("@/pages/data/data-manage"))),
       meta: new RouteMeta("数据管理"),

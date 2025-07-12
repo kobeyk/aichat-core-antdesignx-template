@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './index.scss';
-import CodeEditorPreview from '@/common/components/code-editor-preview';
+import { CodeEditorPreview } from 'aichat-core';
 
 const initialCode = `
 <!DOCTYPE html>

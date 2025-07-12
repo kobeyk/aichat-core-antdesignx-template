@@ -18,13 +18,12 @@ function getItem(
   } as MenuItem;
 }
 export const DataMenu = [
-  getItem("数据查询", "/data/retrieval",),
   getItem("数据管理", "/data/manage"),
 ];
 
 /** 顶部导航菜单 */
 export const HeaderMenu = [
-  getItem("聊天", "/home",<MailOutlined/>),
+  getItem("聊天", "/chat",<MailOutlined/>),
   getItem("数据", "/data",<AppstoreOutlined/>, DataMenu),
 ];
 
