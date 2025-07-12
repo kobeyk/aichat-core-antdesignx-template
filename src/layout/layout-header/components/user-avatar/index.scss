@@ -1,0 +1,9 @@
+.user-avatar {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .user-avatar-name {
+        font-size: 18px;
+        color: rgb(153, 166, 204);
+    }
+}

@@ -1,0 +1,24 @@
+.header {
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  .header-menu {
+    .ant-menu-item,
+    .ant-menu-submenu {
+      margin: 0 10px;
+    }
+    .ant-menu-item::after,
+    .ant-menu-submenu::after {
+      inset-inline: 5px;
+    }
+    .ant-menu-item-selected,
+    .ant-menu-submenu-selected {
+      font-weight: bold;
+    }
+    .ant-menu-title-content {
+      font-size: 18px;
+    }
+  }
+}

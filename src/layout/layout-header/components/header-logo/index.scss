@@ -1,0 +1,10 @@
+.header-logo-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  img {
+    height: 70%;
+  }
+}

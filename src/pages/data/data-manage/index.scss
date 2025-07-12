@@ -1,0 +1,14 @@
+.App {
+    display: flex;
+    height: 100vh;
+}
+
+.editor-container,
+.preview-container {
+    flex: 1;
+    padding: 10px;
+}
+
+.editor-container {
+    border-right: 1px solid #ccc;
+}
