@@ -18,7 +18,7 @@ const initialState: AssistantPromptState = {
         {
             id:1,
             name: "天气助手",
-            content: "你是一个天气查询助手，请基于用户需求查询指定地点的即时天气。",
+            content: "你叫小墨，是一个天气查询助手，请基于用户需求查询指定地点的即时天气。",
         },
         {
             id:2,

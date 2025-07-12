@@ -14,6 +14,7 @@ import {
   LLMCallBackMessage,
   LLMCallBackMessageChoice,
   LLMClient,
+  McpTool,
 } from "aichat-core";
 import LLMStreamChoiceDeltaTooCall from "aichat-core/dist/core/response/LLMStreamChoiceDeltaTooCall";
 import { chatCssStyle, DEFAULT_CONVERSATIONS_ITEMS } from "./data.js";
@@ -41,7 +42,7 @@ const ChatBox: React.FC = () => {
   /** 当前初始化的LLM大模型基本信息 */
   const [llmInfo, setLLMInfo] = useState<LLMInfo>();
   /** 助手角色（如：天气预报 | 研发经理 | 金融大佬） */
-  const [assistant, setAssistant] = useState<string>("");
+  const assistant = useRef<string>(aiPrompts[0].content);
   // ==================== State ====================
   // 历史消息，一个对话对应一组历史消息
   const [messageHistory, setMessageHistory] = useState<Record<string, any>>(
@@ -52,6 +53,8 @@ const ChatBox: React.FC = () => {
   const llmClient = useRef<LLMClient>();
   // 选取工具
   const [toolCalls, setToolCalls] = useState<any[]>([]);
+  // mcp服务器工具列表
+  const [mcpTools, setMcpTools] = useState<McpTool[]>([]);
   // 函数调用结果(key对应的是函数名称，value对应的是函数执行的结果，结果是一个字符串，一般都是json，回显需要格式化)
   const [toolCallResult, setToolCallResult] = useState<Record<string, any>>({});
   // api服务状态，默认是true，假设用户配置的apiKey和baseUrl都是正确的，如果false则意味着后续无法进行LLM问答
@@ -88,6 +91,8 @@ const ChatBox: React.FC = () => {
           );
         }
         await _llmClient.initMcpServer();
+        // 设置mcp工具列表
+        setMcpTools(_llmClient.listTools());
         llmClient.current = _llmClient;
       };
       init();
@@ -232,13 +237,14 @@ const ChatBox: React.FC = () => {
     let messages: ChatCompletionMessageParam[] = [
       {
         role: LLMClient.ROLE_SYSTEM,
-        content: assistant,
+        content: assistant.current,
       },
       {
         role: LLMClient.ROLE_USER,
         content: userContent,
       },
     ];
+    console.log('messages',messages)
     return messages;
   };
 
@@ -408,7 +414,7 @@ const ChatBox: React.FC = () => {
   };
 
    const changeAssitant = (value: string) => { 
-      setAssistant(value)
+      assistant.current = value;
       message.info(`当前助手角色已切换为：${value}`);
    }
 
@@ -464,6 +470,7 @@ const ChatBox: React.FC = () => {
           onMessageSend={onSubmit}
           loading={loading}
           clearMessageHistory={clearMessageHistory}
+          tools = {mcpTools}
         />
       </div>
     </div>

@@ -2,7 +2,7 @@ import { createFromIconfontCN } from "@ant-design/icons";
 
 /** 外网模式(为了方便开发用外网) */
 const icon = createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/c/font_4822249_vtpiwi8ckf.js",
+  scriptUrl: "//at.alicdn.com/t/c/font_4822249_jc7jzbmps5m.js",
 });
 
 /** 内网模式（内网发布，记得将iconfont项目中的图标js文件下载下来，放到public目录下一份） */

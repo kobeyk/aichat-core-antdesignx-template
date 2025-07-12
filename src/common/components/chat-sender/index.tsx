@@ -7,10 +7,11 @@ import {
   ScheduleOutlined,
 } from "@ant-design/icons";
 import { Attachments, Prompts, Sender } from "@ant-design/x";
-import { Button, Flex, GetProp, message } from "antd";
+import { Button, Flex, GetProp, message, Popover, Space, Tooltip } from "antd";
 import { createStyles } from "antd-style";
 import { FC, memo, useEffect, useState } from "react";
 import CustomIcon from "../custom-icon";
+import { McpTool } from "aichat-core";
 
 /**
  * 消息发送组件CssInJS样式
@@ -74,6 +75,8 @@ interface ChatChatMessageSenderProps {
   abortController: AbortController | undefined;
   // 清空消息
   clearMessageHistory: () => void;
+  // 可用工具列表
+  tools?: McpTool[];
 }
 
 /**
@@ -83,7 +86,13 @@ interface ChatChatMessageSenderProps {
  * <date>2025年6月19日16:35:55</date>
  */
 const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
-  ({ loading, onMessageSend, abortController, clearMessageHistory }) => {
+  ({
+    loading,
+    onMessageSend,
+    abortController,
+    clearMessageHistory,
+    tools = [],
+  }) => {
     const { styles } = useStyle();
     // 附件列表打开状态
     const [attachmentsOpen, setAttachmentsOpen] = useState(false);
@@ -109,16 +118,40 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
             type === "drop"
               ? { title: "Drop file here" }
               : {
-                icon: <CloudUploadOutlined />,
-                title: "Upload files",
-                description: "Click or drag files to this area to upload",
-              }
+                  icon: <CloudUploadOutlined />,
+                  title: "Upload files",
+                  description: "Click or drag files to this area to upload",
+                }
           }
         />
       </Sender.Header>
     );
 
+    const mcpToolContent = () => {
+      if (tools.length === 0) {
+        return <span>暂无可用工具</span>;
+      }
+      return (
+        <div style={{ maxHeight: "300px", overflowY: "auto", padding: 2 }}>
+          <ul style={{ marginLeft: 10 }}>
+            {tools.map((tool) => (
+              <li key={tool.name}>
+                <Tooltip
+                  placement="topLeft"
+                  title={tool.description}
+                  arrow={true}
+                >
+                  <span>{tool.name}</span>
+                </Tooltip>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    };
+
     useEffect(() => {
+      console.log("Mcp-Tools : ", tools);
     }, []);
     return (
       <>
@@ -159,15 +192,25 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
           actions={(_, info) => {
             const { SendButton, LoadingButton, SpeechButton } = info.components;
             return (
-              <Flex gap={4}>
-                <CustomIcon
-                  title="清空消息"
-                  type="icon-qingchu"
-                  style={{ fontSize: "20px" }}
-                  onClick={() => {
-                    clearMessageHistory();
-                  }}
-                />
+              <Flex gap={5}>
+                <Space style={{ marginTop: 3 }}>
+                  <Popover content={mcpToolContent()} title="可用MCP-Tools">
+                    <CustomIcon
+                      title="查看工具列表"
+                      type="icon-gongjuxiang"
+                      style={{ fontSize: "20px" }}
+                      onClick={() => {}}
+                    />
+                  </Popover>
+                  <CustomIcon
+                    title="清空消息"
+                    type="icon-qingchu"
+                    style={{ fontSize: "20px" }}
+                    onClick={() => {
+                      clearMessageHistory();
+                    }}
+                  />
+                </Space>
                 <SpeechButton className={styles.speechButton} />
                 {loading ? (
                   <LoadingButton type="default" />
