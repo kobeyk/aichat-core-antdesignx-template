@@ -1,7 +1,9 @@
-# Mcp-Client-Template
+# aichat-core-antdesignx-template
 
 #### Introduction
- Vite4 + React18 + TypeScript + OpenAI + MCPClient 构建的前端全能AI助手
+Vite4 + React18 + TypeScript + OpenAI + MCPClient + [aichat-core](https://www.npmjs.com/package/aichat-core) 构建的前端全能AI助手
+
+
 
 #### Picures 
 
@@ -25,6 +27,8 @@
 ##### 6.callback message(v2) choices JSON Data
 ![image](./public/images/6.callBackMessageChoices-data.png)
 
+# Article
 
+Address ： [aichat-core简化 LLM 与 MCP 集成的前端核心库（TypeScript）](https://blog.csdn.net/Appleyk/article/details/149234650) 
 
 
