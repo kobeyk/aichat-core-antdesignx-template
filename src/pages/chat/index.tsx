@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { LLMNames, mcpServer, useMockData } from "@/common/config/sysConfig";
 import { useXAgent, useXChat } from "@ant-design/x";
 import { message as adxMessage, message, Select, Space } from "antd";
-import { createStyles } from "antd-style";
 import ChatBubbleList from "../../common/components/chat-bubble-list";
 import ChatMessageSender from "../../common/components/chat-sender/index";
 import ChatConversationMG from "../../common/components/chat-sider";
@@ -16,7 +15,6 @@ import {
   LLMClient,
   McpTool,
 } from "aichat-core";
-import LLMStreamChoiceDeltaTooCall from "aichat-core/dist/core/response/LLMStreamChoiceDeltaTooCall";
 import { chatCssStyle, DEFAULT_CONVERSATIONS_ITEMS } from "./data.js";
 import { useAppSelector } from "@/store/hooks";
 
@@ -93,6 +91,8 @@ const ChatBox: React.FC = () => {
         await _llmClient.initMcpServer();
         // 设置mcp工具列表
         setMcpTools(_llmClient.listTools());
+        // 是否开启流式日志debug模型，控制台打印每一步的chunk数据块对象
+        _llmClient.setLogDebug(false)
         llmClient.current = _llmClient;
       };
       init();
@@ -106,7 +106,7 @@ const ChatBox: React.FC = () => {
   /** 消息回调 (callBackMessage对象已经经过深拷贝)*/
   const onMessageContentCallBack = (callBackMessage: LLMCallBackMessage) => {
     const _currentConversation = curConversation.current;
-    let _llmChoices = callBackMessage.choices;
+    let _llmChoices = callBackMessage.choices ?? [];
     let _messageId = callBackMessage.id;
     if (!_llmChoices || _llmChoices.length == 0) {
       return [];
@@ -149,6 +149,7 @@ const ChatBox: React.FC = () => {
               if (updateChoice.content && updateChoice.content != "") {
                 _target.content = _content + updateChoice.content;
               }
+              _target.toolsCallDes = updateChoice.toolsCallDes;
               _target.tools = updateChoice.tools;
               _target.usage = updateChoice.usage;
             } else {
@@ -167,7 +168,7 @@ const ChatBox: React.FC = () => {
   /**
    * 工具调用信息回调函数
    */
-  const onCallToolCallBack = (toolCalls: LLMStreamChoiceDeltaTooCall[]) => {
+  const onCallToolCallBack = (toolCalls: any[]) => {
     if (toolCalls && toolCalls.length > 0) {
       setToolCalls(toolCalls);
     }

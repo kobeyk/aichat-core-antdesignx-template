@@ -20,7 +20,7 @@ const DEFAULT_CONVERSATIONS_ITEMS = [
   },
 ];
 
-const chatCssStyle = createStyles(({ token, css }: { token: any; css: any }) => {
+const chatCssStyle:any = createStyles(({ token, css }: { token: any; css: any }) => {
   return {
     layout: css`
       width: 100%;

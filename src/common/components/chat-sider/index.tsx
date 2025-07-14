@@ -1,4 +1,4 @@
-import { Avatar, Button, message } from "antd";
+import { Avatar, Button } from "antd";
 import { FC } from "react";
 import dayjs from "dayjs";
 import { createStyles } from "antd-style";
@@ -11,7 +11,7 @@ import {
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 
-const useStyle = createStyles(({ token, css }: { token: any; css: any }) => {
+const useStyle:any = createStyles(({ token, css }: { token: any; css: any }) => {
   return {
     // sider 样式
     sider: css`

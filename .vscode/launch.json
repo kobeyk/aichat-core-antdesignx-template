@@ -1,0 +1,8 @@
+{
+    "version": "0.2.0",
+    "configurations": [{
+        "name":"launch Chrome",
+        "type":"pwa-chrome",
+        "url":"http://localhost:3066"
+    }]
+}

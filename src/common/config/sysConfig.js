@@ -5,6 +5,7 @@ const apiKey = window.apiKey;
 const model = window.model;
 const mcpServer = window.mcpServer;
 const defaultLLM = window.defaultLLM;
+const defaultModelName = window.defaultModelName;
 const abortRequestMessage = "您已取消当前请求，本次消息响应终止！"
 const LLMNames = {
     ollama: "ollama",
@@ -24,6 +25,7 @@ export {
     ModelNames,
     LLMNames,
     defaultLLM,
+    defaultModelName,
     abortRequestMessage,
     useMockData
 };

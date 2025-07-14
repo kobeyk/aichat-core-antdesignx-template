@@ -16,7 +16,7 @@ import { McpTool } from "aichat-core";
 /**
  * 消息发送组件CssInJS样式
  */
-const useStyle = createStyles(({ token, css }: { token: any; css: any }) => {
+const useStyle:any = createStyles(({ token, css }: { token: any; css: any }) => {
   return {
     // sender 样式
     sender: css`
