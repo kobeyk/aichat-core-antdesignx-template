@@ -16,26 +16,28 @@ import { McpTool } from "aichat-core";
 /**
  * 消息发送组件CssInJS样式
  */
-const useStyle:any = createStyles(({ token, css }: { token: any; css: any }) => {
-  return {
-    // sender 样式
-    sender: css`
-      width: 100%;
-      max-width: 1100px;
-      margin: 0 auto;
-    `,
-    speechButton: css`
-      font-size: 18px;
-      color: ${token.colorText} !important;
-    `,
-    senderPrompt: css`
-      width: 100%;
-      max-width: 1100px;
-      margin: 0 auto;
-      color: ${token.colorText};
-    `,
-  };
-});
+const useStyle: any = createStyles(
+  ({ token, css }: { token: any; css: any }) => {
+    return {
+      // sender 样式
+      sender: css`
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+      `,
+      speechButton: css`
+        font-size: 18px;
+        color: ${token.colorText} !important;
+      `,
+      senderPrompt: css`
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        color: ${token.colorText};
+      `,
+    };
+  }
+);
 
 const SENDER_PROMPTS: GetProp<typeof Prompts, "items"> = [
   {

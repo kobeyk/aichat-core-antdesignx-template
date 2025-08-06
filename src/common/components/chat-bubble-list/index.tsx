@@ -1,12 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import {
-  apiKey,
-  baseUrl,
-  defaultLLM,
-  defaultModelName,
-  LLMNames,
-  ModelNames,
-} from "@/common/config/sysConfig";
+import {apiKey,baseUrl,modelName,} from "@/common/config/sysConfig";
 import {
   CopyOutlined,
   DislikeOutlined,
@@ -22,7 +15,6 @@ import {
   Flex,
   FloatButton,
   message,
-  Select,
   Space,
   Spin,
 } from "antd";
@@ -32,16 +24,10 @@ import aiJpg from "@/assets/images/ai.jpg";
 import userJpg from "@/assets/images/avatar.jpg";
 import { convertTimestampToDate } from "@/utils/utils";
 import { ChatBubbleItem, LLMCallBackMessage, LLMClient } from "aichat-core";
-import {
-  DESIGN_GUIDE,
-  HOT_TOPICS,
-  llmOptions,
-  bubbleListCssStyle,
-} from "./data";
+import {DESIGN_GUIDE,HOT_TOPICS,bubbleListCssStyle,} from "./data";
 import "./index.scss";
-
 export interface LLMInfo {
-  llmName: string;
+  llmName?: string;
   apiKey: string;
   baseUrl: string;
   modelName: string;
@@ -73,32 +59,19 @@ const ChatBubbleList: FC<ChatBubbleListProps> = ({
   onMessageSend,
   onSetLLM,
 }) => {
+  
   const { styles } = bubbleListCssStyle();
   const messagesEndRef = useRef<any>(null);
   const [currentModel, setCurrentModel] = useState<string>();
 
   useEffect(() => {
-    if (defaultLLM === LLMNames.deepseek) {
-      setCurrentModel(defaultModelName);
+      setCurrentModel(modelName);
       onSetLLM({
-        llmName: LLMNames.deepseek,
         apiKey: apiKey,
         baseUrl: baseUrl,
-        modelName: defaultModelName,
+        modelName: modelName,
       });
-    } else {
-      // 默认使用ollama（自定义部署llm方式）
-      setCurrentModel(defaultModelName);
-      onSetLLM({
-        llmName: LLMNames.ollama,
-        apiKey: "EMPTY",
-        baseUrl: baseUrl,
-        modelName: defaultModelName,
-      });
-    }
-    console.log(
-      `=====================0.默认使用的大语言模型：${defaultLLM},模型名称: ${defaultModelName}`
-    );
+    console.log(`=====================0.默认使用的大语言模型名称: ${modelName}`);
   }, []);
 
   // 消息变了就自动滚动到底部
@@ -125,36 +98,6 @@ const ChatBubbleList: FC<ChatBubbleListProps> = ({
       messagesEndRef.current.scrollTo({ top: height, ...options });
     }
   }, 300);
-
-  const changeLLMInfo = (value: string) => {
-    if (value === LLMNames.ollama) {
-      onSetLLM({
-        llmName: value,
-        apiKey: "EMPTY",
-        baseUrl: baseUrl,
-        modelName: ModelNames.ollama,
-      });
-    } else if (value === LLMNames.deepseek) {
-      onSetLLM({
-        llmName: value,
-        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-        baseUrl: import.meta.env.VITE_OPENAI_BASE_URL,
-        modelName: ModelNames.deepseek,
-      });
-    }
-  };
-
-  const selectLLM = (
-    <div>
-      <Select
-        style={{ width: 420 }}
-        placeholder="请选择一个合适的LLM模型进行聊天！"
-        options={llmOptions}
-        onChange={changeLLMInfo}
-        defaultValue={LLMNames.deepseek}
-      />
-    </div>
-  );
 
   const getBubbleItemHeader = (msg: LLMCallBackMessage) => {
     let name = msg.role === LLMClient.ROLE_USER ? "用户" : currentModel;
@@ -232,10 +175,8 @@ const ChatBubbleList: FC<ChatBubbleListProps> = ({
         >
           <Welcome
             variant="borderless"
-            // icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
             icon={<Avatar size={48} src={robotPng} />}
-            // title={`Hello, I'm ${model}`}
-            title={selectLLM}
+            title={`Hello, I'm ${modelName}`}
             description="一个基于原生OpenAI和MCP·SDK结合编码实现的Web端全能AI助手！"
           />
           <Flex gap={16}>

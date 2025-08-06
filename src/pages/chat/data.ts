@@ -2,19 +2,19 @@ import { createStyles } from "antd-style";
 const DEFAULT_CONVERSATIONS_ITEMS = [
   {
     key: "default-0",
-    label: "What is Ant Design X?",
+    label: "What is AIChat-Core?",
     init: false, // 是否初始化标题
     group: "今日",
   },
   {
     key: "default-1",
-    label: "How to quickly install and import components?",
+    label: "How to quickly install and use adxcli?",
     init: false, // 是否初始化标题
     group: "今日",
   },
   {
     key: "default-2",
-    label: "New AGI Hybrid Interface",
+    label: "A Library for OpenAI and MCP.",
     init: false, // 是否初始化标题
     group: "昨天",
   },
