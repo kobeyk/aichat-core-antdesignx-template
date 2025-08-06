@@ -449,20 +449,6 @@ const ChatBox: React.FC = () => {
         setMessages={setMessages}
       />
       <div className={styles.chat}>
-        {messageHistory[curConversation.current]?.length > 0 && (
-          <div className={styles.assistant}>
-            <Space>
-              <label>请选择助手角色：</label>
-              <Select
-                style={{ width: 120 }}
-                placeholder="请选择一个合适的LLM模型进行聊天！"
-                options={buildAiPromptOptions()}
-                onChange={changeAssitant}
-                defaultValue={"生态助手"}
-              />
-            </Space>
-          </div>
-        )}
         <ChatBubbleList
           curConversation={curConversation.current}
           messageHistory={messageHistory}
