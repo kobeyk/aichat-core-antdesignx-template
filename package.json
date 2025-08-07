@@ -1,7 +1,7 @@
 {
   "name": "aichat-core-antdesignx-template",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "借助antd design x及开源包aichat-core封装的web端AI聊天助手App脚手架代码（TS版本）",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@types/codemirror": "^5.60.16",
     "@types/crypto-js": "^4.1.3",
-    "aichat-core": "^1.0.12",
+    "aichat-core": "^1.0.13",
     "antd": "^5.19.1",
     "antd-style": "^3.7.1",
     "axios": "^1.5.1",
