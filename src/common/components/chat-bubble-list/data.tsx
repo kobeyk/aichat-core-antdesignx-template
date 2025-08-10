@@ -1,4 +1,3 @@
-import { LLMNames } from "@/common/config/sysConfig";
 import {
   CommentOutlined,
   HeartOutlined,
@@ -119,16 +118,4 @@ const DESIGN_GUIDE = {
   ],
 };
 
-/** llm配置 */
-const llmOptions = [
-  {
-    value: LLMNames.ollama,
-    label: "ollama:本地部署",
-  },
-  {
-    value: LLMNames.deepseek,
-    label: "深度求索：https://api.deepseek.com",
-  },
-];
-
-export { bubbleListCssStyle, HOT_TOPICS, DESIGN_GUIDE, llmOptions };
+export { bubbleListCssStyle, HOT_TOPICS, DESIGN_GUIDE };

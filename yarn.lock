@@ -567,9 +567,15 @@
     zod-to-json-schema "^3.24.1"
 
 "@modelcontextprotocol/sdk@^1.15.0":
+<<<<<<< HEAD
   version "1.17.2"
   resolved "https://registry.npmmirror.com/@modelcontextprotocol/sdk/-/sdk-1.17.2.tgz#232d079c374bef18d0b411e5d8c7e6c5f24e8684"
   integrity sha512-EFLRNXR/ixpXQWu6/3Cu30ndDFIFNaqUXcTqsGebujeMan9FzhAaFFswLRiFj61rgygDRr8WO1N+UijjgRxX9g==
+=======
+  version "1.17.1"
+  resolved "https://registry.npmmirror.com/@modelcontextprotocol/sdk/-/sdk-1.17.1.tgz#a3628ae2ca0b4a2e6088202b5ee417d884a88537"
+  integrity sha512-CPle1OQehbWqd25La9Ack5B07StKIxh4+Bf19qnpZKJC1oI22Y0czZHbifjw1UoczIfKBwBDAp/dFxvHG13B5A==
+>>>>>>> fb9f954ce974529ee94c5d1f14f0b733aadaaa29
   dependencies:
     ajv "^6.12.6"
     content-type "^1.0.5"

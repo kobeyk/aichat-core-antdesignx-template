@@ -1,0 +1,11 @@
+.ai-assistant-list-item{
+    padding: 2px;
+    cursor:pointer;
+}
+
+.ai-assistant-list-item-selected{
+    padding: 2px;
+    cursor:pointer;
+    background-color: rgb(204, 246, 184);
+    border:  2px dashed #1890ff;
+}

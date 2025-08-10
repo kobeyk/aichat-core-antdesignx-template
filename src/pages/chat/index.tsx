@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { LLMNames, mcpServer, useMockData } from "@/common/config/sysConfig";
+import { logDebug, mcpServer, useMockData } from "@/common/config/sysConfig";
 import { useXAgent, useXChat } from "@ant-design/x";
 import { message as adxMessage, message, Select, Space } from "antd";
 import ChatBubbleList from "../../common/components/chat-bubble-list";
@@ -17,6 +17,7 @@ import {
 } from "aichat-core";
 import { chatCssStyle, DEFAULT_CONVERSATIONS_ITEMS } from "./data.js";
 import { useAppSelector } from "@/store/hooks";
+import SnConsts from '../../typing/extra/SnConsts';
 
 type BubbleDataType = {
   role: string;
@@ -40,7 +41,7 @@ const ChatBox: React.FC = () => {
   /** 当前初始化的LLM大模型基本信息 */
   const [llmInfo, setLLMInfo] = useState<LLMInfo>();
   /** 助手角色（如：天气预报 | 研发经理 | 金融大佬） */
-  const assistant = useRef<string>(aiPrompts[0].content);
+  const assistant = useRef<string>(undefined);
   // ==================== State ====================
   // 历史消息，一个对话对应一组历史消息
   const [messageHistory, setMessageHistory] = useState<Record<string, any>>(
@@ -73,26 +74,17 @@ const ChatBox: React.FC = () => {
       // 实例化llmClient及初始化mcpClient
       const init = async () => {
         let _llmClient;
-        let llmName = llmInfo.llmName;
         let apiKey = llmInfo.apiKey;
         let baseUrl = llmInfo.baseUrl;
         let modelName = llmInfo.modelName;
-        if (llmName === LLMNames.ollama) {
-          _llmClient = new LLMClient("", "", apiKey, baseUrl, modelName);
-        } else {
-          _llmClient = new LLMClient(
-            mcpServer,
-            "demo",
-            apiKey,
-            baseUrl,
-            modelName
-          );
-        }
+        _llmClient = new LLMClient(mcpServer,"demo",apiKey,baseUrl,modelName);
+        // 初始化mcp服务器
         await _llmClient.initMcpServer();
         // 设置mcp工具列表
         setMcpTools(_llmClient.listTools());
         // 是否开启流式日志debug模型，控制台打印每一步的chunk数据块对象
-        _llmClient.setLogDebug(false)
+        _llmClient.setLogDebug(logDebug > 0)
+        // 绑定client
         llmClient.current = _llmClient;
       };
       init();
@@ -100,8 +92,13 @@ const ChatBox: React.FC = () => {
   }, [llmInfo]);
 
   useEffect(() => {
-    // console.log('messageHistory: ', messageHistory);
-  }, [messageHistory]);
+      let promptId = localStorage.getItem(SnConsts.PROMPT_CACHE_ID);
+      if (promptId){
+        assistant.current = aiPrompts[Number(promptId)-1].content;
+      }else{
+        assistant.current = aiPrompts[0].content;
+      }
+  },[])
 
   /** 消息回调 (callBackMessage对象已经经过深拷贝)*/
   const onMessageContentCallBack = (callBackMessage: LLMCallBackMessage) => {
@@ -235,10 +232,16 @@ const ChatBox: React.FC = () => {
   const onInitMessageContent = (
     userContent: string
   ): ChatCompletionMessageParam[] => {
+    let promptId = localStorage.getItem(SnConsts.PROMPT_CACHE_ID);
+    if (promptId){
+      assistant.current = aiPrompts[Number(promptId)-1].content;
+    }else{
+      assistant.current = aiPrompts[0].content;
+    }
     let messages: ChatCompletionMessageParam[] = [
       {
         role: LLMClient.ROLE_SYSTEM,
-        content: assistant.current,
+        content: assistant.current ? assistant.current : "你没有既定角色，可以基于用户提问随意发挥。",
       },
       {
         role: LLMClient.ROLE_USER,
@@ -446,20 +449,6 @@ const ChatBox: React.FC = () => {
         setMessages={setMessages}
       />
       <div className={styles.chat}>
-        {messageHistory[curConversation.current]?.length > 0 && (
-          <div className={styles.assistant}>
-            <Space>
-              <label>请选择助手角色：</label>
-              <Select
-                style={{ width: 120 }}
-                placeholder="请选择一个合适的LLM模型进行聊天！"
-                options={buildAiPromptOptions()}
-                onChange={changeAssitant}
-                defaultValue={"天气助手"}
-              />
-            </Space>
-          </div>
-        )}
         <ChatBubbleList
           curConversation={curConversation.current}
           messageHistory={messageHistory}
