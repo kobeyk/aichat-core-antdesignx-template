@@ -548,10 +548,28 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@modelcontextprotocol/sdk@^1.12.1", "@modelcontextprotocol/sdk@^1.15.0":
+"@modelcontextprotocol/sdk@^1.12.1":
   version "1.15.1"
   resolved "https://registry.npmmirror.com/@modelcontextprotocol/sdk/-/sdk-1.15.1.tgz"
   integrity sha512-W/XlN9c528yYn+9MQkVjxiTPgPxoxt+oczfjHBDsJx0+59+O7B75Zhsp0B16Xbwbz8ANISDajh6+V7nIcPMc5w==
+  dependencies:
+    ajv "^6.12.6"
+    content-type "^1.0.5"
+    cors "^2.8.5"
+    cross-spawn "^7.0.5"
+    eventsource "^3.0.2"
+    eventsource-parser "^3.0.0"
+    express "^5.0.1"
+    express-rate-limit "^7.5.0"
+    pkce-challenge "^5.0.0"
+    raw-body "^3.0.0"
+    zod "^3.23.8"
+    zod-to-json-schema "^3.24.1"
+
+"@modelcontextprotocol/sdk@^1.15.0":
+  version "1.17.2"
+  resolved "https://registry.npmmirror.com/@modelcontextprotocol/sdk/-/sdk-1.17.2.tgz#232d079c374bef18d0b411e5d8c7e6c5f24e8684"
+  integrity sha512-EFLRNXR/ixpXQWu6/3Cu30ndDFIFNaqUXcTqsGebujeMan9FzhAaFFswLRiFj61rgygDRr8WO1N+UijjgRxX9g==
   dependencies:
     ajv "^6.12.6"
     content-type "^1.0.5"
@@ -1101,10 +1119,10 @@ acorn@^8.9.0:
   resolved "https://registry.npmmirror.com/acorn/-/acorn-8.14.1.tgz"
   integrity sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==
 
-aichat-core@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.npmmirror.com/aichat-core/-/aichat-core-1.0.11.tgz#1aa4eb81632156abf3df63d5284a4ff72cfc583d"
-  integrity sha512-7GGuxI9wCVwjRAWBhfb0nlm2hRRGn8wXCS40WaUc7UEgCQFbxfH6j5qG4MLeoNEdvGgLCy6qVDsZLbVY5Qlz5g==
+aichat-core@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.npmmirror.com/aichat-core/-/aichat-core-1.0.15.tgz#13a8c50e7c80b7ce598c45844b3c03be6283ff73"
+  integrity sha512-HMQURaRYS/0+N8xUwrm6iw3KiJHDkPdxG0TrrUOIZQFXENgPcWDU62w9vISQ1uCDEJG9BCeUyBVqzPcNrORsWw==
   dependencies:
     "@modelcontextprotocol/sdk" "^1.15.0"
     codemirror "5"
