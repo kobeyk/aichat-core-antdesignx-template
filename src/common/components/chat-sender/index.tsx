@@ -2,16 +2,25 @@ import { abortRequestMessage } from "@/common/config/sysConfig";
 import {
   CloudUploadOutlined,
   FileSearchOutlined,
-  PaperClipOutlined,
   ProductOutlined,
   ScheduleOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { Attachments, Prompts, Sender } from "@ant-design/x";
-import { Button, Flex, GetProp, message, Popover, Space, Tooltip } from "antd";
+import {
+  Button,
+  Flex,
+  GetProp,
+  message,
+  Popover,
+  Space,
+  Tooltip,
+  Upload,
+} from "antd";
 import { createStyles } from "antd-style";
 import { FC, memo, useEffect, useState } from "react";
 import CustomIcon from "../custom-icon";
-import { McpTool } from "aichat-core";
+import { LLMUtil, McpTool } from "aichat-core";
 
 /**
  * 消息发送组件CssInJS样式
@@ -72,7 +81,7 @@ const SENDER_PROMPTS: GetProp<typeof Prompts, "items"> = [
  */
 interface ChatChatMessageSenderProps {
   loading: boolean;
-  onMessageSend: (message: string) => void;
+  onMessageSend: (message: any) => void;
   // 请求中断控制器
   abortController: AbortController | undefined;
   // 清空消息
@@ -102,6 +111,8 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
     const [attachedFiles, setAttachedFiles] = useState<
       GetProp<typeof Attachments, "items">
     >([]);
+    // 测试：当前上传的图片
+    const [uploadFile, setUploadFile] = useState<any>();
     // 用户输入的内容（聊天内容）
     const [inputValue, setInputValue] = useState("");
 
@@ -113,9 +124,26 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
         styles={{ content: { padding: 0 } }}
       >
         <Attachments
-          beforeUpload={() => false}
+          beforeUpload={(file) => {
+            // 上传文件前先校验下
+            const isPNG =
+              file.type === "image/png" || file.type === "image/jpeg";
+            if (!isPNG) {
+              message.error(`${file.name} is not a png file`);
+            }
+            return isPNG || Upload.LIST_IGNORE;
+          }}
           items={attachedFiles}
-          onChange={(info) => setAttachedFiles(info.fileList)}
+          action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+          method="POST"
+          multiple={false}
+          maxCount={1}
+          onChange={async (info) => {
+            if (info.file.status == "uploading") {
+              setUploadFile(info.file);
+            }
+            setAttachedFiles(info.fileList);
+          }}
           placeholder={(type) =>
             type === "drop"
               ? { title: "Drop file here" }
@@ -151,7 +179,45 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
         </div>
       );
     };
-
+    const onUserInputMessageCallBack = async (userInput: string) => {
+      if (uploadFile) {
+        let fileType = uploadFile.type as string;
+        if (fileType && fileType.includes("image")) {
+          const base64 = (await LLMUtil.file2Base64(
+            uploadFile.originFileObj
+          )) as string;
+          /** 这个地方要特殊定制
+           *     content: [
+                      {
+                          type: "text",
+                          text: "请描述下这张图片的内容"
+                      },
+                      {
+                          type: "image_url",
+                          "image_url": { url: LLMUtil.getBase64Data(imageBase64, "image/png") }
+                          // "image_url": { url: "https://i-blog.csdnimg.cn/blog_migrate/f068d6994ceb7b38201e5b102d0fe8f2.png" }
+                      }
+                  ],
+           */
+          const content = [
+            {
+              type: "text",
+              text: userInput,
+            },
+            {
+              type: "image_url",
+              image_url: { url: LLMUtil.getBase64Data(base64, "image/png") },
+            },
+          ];
+          onMessageSend(content);
+          setAttachedFiles([]);
+          setUploadFile(undefined);
+          setAttachmentsOpen(false);
+        }
+      } else {
+        onMessageSend(userInput);
+      }
+    };
     useEffect(() => {
       console.log("Mcp-Tools : ", tools);
     }, []);
@@ -161,7 +227,7 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
         <Prompts
           items={SENDER_PROMPTS}
           onItemClick={(info) => {
-            onMessageSend(info.data.description as string);
+            onUserInputMessageCallBack(info.data.description as string);
           }}
           styles={{
             item: { padding: "6px 12px" },
@@ -173,7 +239,7 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
           value={inputValue}
           header={senderHeader}
           onSubmit={() => {
-            onMessageSend(inputValue);
+            onUserInputMessageCallBack(inputValue);
             setInputValue("");
           }}
           onChange={setInputValue}
@@ -184,7 +250,7 @@ const ChatMessageSender: FC<ChatChatMessageSenderProps> = memo(
           prefix={
             <Button
               type="text"
-              icon={<PaperClipOutlined style={{ fontSize: 18 }} />}
+              icon={<UploadOutlined style={{ fontSize: 18 }} />}
               onClick={() => setAttachmentsOpen(!attachmentsOpen)}
             />
           }

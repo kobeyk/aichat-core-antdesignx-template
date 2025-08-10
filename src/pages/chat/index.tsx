@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { logDebug, mcpServer, useMockData } from "@/common/config/sysConfig";
+import {
+  logDebug,
+  mcpServer,
+  modelName,
+  useMockData,
+} from "@/common/config/sysConfig";
 import { useXAgent, useXChat } from "@ant-design/x";
 import { message as adxMessage, message, Select, Space } from "antd";
 import ChatBubbleList from "../../common/components/chat-bubble-list";
@@ -17,7 +22,7 @@ import {
 } from "aichat-core";
 import { chatCssStyle, DEFAULT_CONVERSATIONS_ITEMS } from "./data.js";
 import { useAppSelector } from "@/store/hooks";
-import SnConsts from '../../typing/extra/SnConsts';
+import SnConsts from "../../typing/extra/SnConsts";
 
 type BubbleDataType = {
   role: string;
@@ -77,13 +82,19 @@ const ChatBox: React.FC = () => {
         let apiKey = llmInfo.apiKey;
         let baseUrl = llmInfo.baseUrl;
         let modelName = llmInfo.modelName;
-        _llmClient = new LLMClient(mcpServer,"demo",apiKey,baseUrl,modelName);
+        _llmClient = new LLMClient(
+          mcpServer,
+          "demo",
+          apiKey,
+          baseUrl,
+          modelName
+        );
         // 初始化mcp服务器
         await _llmClient.initMcpServer();
         // 设置mcp工具列表
         setMcpTools(_llmClient.listTools());
         // 是否开启流式日志debug模型，控制台打印每一步的chunk数据块对象
-        _llmClient.setLogDebug(logDebug > 0)
+        _llmClient.setLogDebug(logDebug > 0);
         // 绑定client
         llmClient.current = _llmClient;
       };
@@ -92,13 +103,13 @@ const ChatBox: React.FC = () => {
   }, [llmInfo]);
 
   useEffect(() => {
-      let promptId = localStorage.getItem(SnConsts.PROMPT_CACHE_ID);
-      if (promptId){
-        assistant.current = aiPrompts[Number(promptId)-1].content;
-      }else{
-        assistant.current = aiPrompts[0].content;
-      }
-  },[])
+    let promptId = localStorage.getItem(SnConsts.PROMPT_CACHE_ID);
+    if (promptId) {
+      assistant.current = aiPrompts[Number(promptId) - 1].content;
+    } else {
+      assistant.current = aiPrompts[0].content;
+    }
+  }, []);
 
   /** 消息回调 (callBackMessage对象已经经过深拷贝)*/
   const onMessageContentCallBack = (callBackMessage: LLMCallBackMessage) => {
@@ -233,22 +244,24 @@ const ChatBox: React.FC = () => {
     userContent: string
   ): ChatCompletionMessageParam[] => {
     let promptId = localStorage.getItem(SnConsts.PROMPT_CACHE_ID);
-    if (promptId){
-      assistant.current = aiPrompts[Number(promptId)-1].content;
-    }else{
+    if (promptId) {
+      assistant.current = aiPrompts[Number(promptId) - 1].content;
+    } else {
       assistant.current = aiPrompts[0].content;
     }
     let messages: ChatCompletionMessageParam[] = [
       {
         role: LLMClient.ROLE_SYSTEM,
-        content: assistant.current ? assistant.current : "你没有既定角色，可以基于用户提问随意发挥。",
+        content: assistant.current
+          ? assistant.current
+          : "你没有既定角色，可以基于用户提问随意发挥。",
       },
       {
         role: LLMClient.ROLE_USER,
         content: userContent,
       },
     ];
-    console.log('messages',messages)
+    console.log("messages", messages);
     return messages;
   };
 
@@ -328,6 +341,8 @@ const ChatBox: React.FC = () => {
           3.  transformStream?: XStreamOptions<Message>['transformStream'],
     */
     request: async ({ message }, { onError }) => {
+      /** 这个地方一定要 + 1000 * ？毫秒数，以防止和上述用户的消息key在同一时刻相同了（demo的时候复现了好几次） */
+      let messageId = getTimeKey(5000);
       try {
         if (!apiState.current) {
           adxMessage.error(
@@ -352,8 +367,6 @@ const ChatBox: React.FC = () => {
           _currentConversation,
           userContent
         );
-        /** 这个地方一定要 + 1000 * ？毫秒数，以防止和上述用户的消息key在同一时刻相同了（demo的时候复现了好几次） */
-        let messageId = getTimeKey(5000);
         // 初始化ai聊天信息，先占个位置
         onInitMessage(
           messageId,
@@ -370,10 +383,27 @@ const ChatBox: React.FC = () => {
           abortController.current
         );
       } catch (error: any) {
-        adxMessage.error("Request error: " + error);
+        /**
+         * 2025年8月10日 21:22:03，上传了一张图片，图片中涉及到敏感内容，
+         * 于是触发了阿里云百炼平台数据大模型qwen-vl-plus的监测机制，错误是：
+         * 400 Input data may contain inappropriate content.
+         */
+        onMessageContentCallBack({
+          id: messageId,
+          role: LLMClient.ROLE_AI,
+          typing: true,
+          loading: false,
+          model: modelName,
+          choices: [
+            {
+              index: 1,
+              thinking: -1,
+              content: error.message || "Request failed, please try again!",
+            },
+          ],
+        });
         // 异常标记
         apiState.current = false;
-        console.error("Request error:", error);
         onError(error);
         setLoading(false);
       }
@@ -406,7 +436,7 @@ const ChatBox: React.FC = () => {
 
   // 构建当前聊天会话的助手角色选项
   const buildAiPromptOptions = () => {
-    let options:any = [];
+    let options: any = [];
     aiPrompts.forEach((prompt) => {
       options.push({
         value: prompt.content,
@@ -417,13 +447,13 @@ const ChatBox: React.FC = () => {
     return options;
   };
 
-   const changeAssitant = (value: string) => { 
-      assistant.current = value;
-      message.info(`当前助手角色已切换为：${value}`);
-   }
+  const changeAssitant = (value: string) => {
+    assistant.current = value;
+    message.info(`当前助手角色已切换为：${value}`);
+  };
 
   // ==================== Event ====================
-  const onSubmit = (val: string) => {
+  const onSubmit = (val: any) => {
     if (!val) return;
     if (loading) {
       adxMessage.error("当前回答还在进行中，请完成后再发起下一轮问答！");
@@ -460,7 +490,7 @@ const ChatBox: React.FC = () => {
           onMessageSend={onSubmit}
           loading={loading}
           clearMessageHistory={clearMessageHistory}
-          tools = {mcpTools}
+          tools={mcpTools}
         />
       </div>
     </div>
